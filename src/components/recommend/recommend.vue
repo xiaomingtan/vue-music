@@ -24,7 +24,7 @@
           }
         },
         created() {
-            this._getRecommend();
+            this._getRecommend()
         },
         methods: {
             _getRecommend() {
@@ -35,7 +35,7 @@
                         console.log(res.code)
                     }
                })
-            }
+            },
         },
         components : {
             slider
