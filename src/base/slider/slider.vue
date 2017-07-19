@@ -46,7 +46,7 @@
                 if (this.autoPlay) {
                     this._play()
                 }
-            }, 1000)
+            }, 20)
 
             window.addEventListener('resize', () => {
                 if (!this.slider) {
@@ -72,6 +72,7 @@
                 this.children = sliderGroup.children;
                 let totalWidth = 0;
                 let sliderWidth = this.$refs.slider.clientWidth;
+
                 for (let i=0; i<this.children.length; i++) {
                     let child = this.children[i];
                     addClass(child, 'slider-item')
@@ -138,7 +139,7 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
     @import "~common/stylus/variable"
     .slider
         position : relative
