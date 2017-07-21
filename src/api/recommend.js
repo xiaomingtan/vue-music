@@ -1,6 +1,3 @@
-/**
- * Created by tanjl on 2017/7/17.
- */
 import jsonp from '@/common/js/jsonp'
 import {commonParams, options} from './config'
 import axios from 'axios'

@@ -41,6 +41,9 @@
                     click: this.click
                 })
             },
+            scrollToElement() {
+                this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
+            },
             disable() {
                 this.scroll && this.scroll.disable()
             },

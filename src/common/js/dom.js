@@ -17,3 +17,13 @@ export function addClass(dom, className) {
     classNameArr.push(className)
     dom.className = classNameArr.join(' ')
 }
+
+export function getData(el, name, val) {
+    const prefix = 'data-'
+    let realname = prefix + name
+    if (val) {
+        return el.setAttribute(realname, val)
+    }
+
+    return el.getAttribute(realname)
+}

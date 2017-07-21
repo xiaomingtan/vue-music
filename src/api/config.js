@@ -1,6 +1,3 @@
-/**
- * Created by tanjl on 2017/7/17.
- */
 export const commonParams = {
     'g_tk' : 5381,
     'inCharset' : 'utf-8',
