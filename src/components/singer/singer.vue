@@ -1,9 +1,7 @@
 <template>
     <div class="singer">
-        <list-view :data="singers"></list-view>
-        <div class="loading-wrapper" v-show="!singers.length">
-            <loading></loading>
-        </div>
+        <list-view :data="singers" @select="selectSinger"></list-view>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -12,7 +10,6 @@
     import {getSingerList} from '@/api/singer'
     import Singer from '@/common/js/singer'
     import ListView from '@/base/listview/listview'
-    import loading from '@/base/loading/loading'
     const HOT_NAME = '热门'
     const HOT_SINGER_LEN = 10
     export default {
@@ -87,11 +84,15 @@
 
                 console.log(this.singers)
 
+            },
+            selectSinger(singer) {
+                this.$router.push({
+                    path: `singer/${singer.id}`
+                })
             }
         },
         components: {
-            ListView,
-            loading,
+            ListView
         }
     }
 </script>

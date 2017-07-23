@@ -10,13 +10,16 @@
             <li v-for="group in data" class="list-group" ref="listGroup">
                 <h2 class="list-group-title">{{group.title}}</h2>
                 <ul>
-                    <li v-for="item in group.items" class="list-group-item">
+                    <li v-for="item in group.items" class="list-group-item" @click="selectItem(item)">
                         <img class="avatar" v-lazy="item.avatar">
                         <span class="name">{{item.name}}</span>
                     </li>
                 </ul>
             </li>
         </ul>
+        <div class="loading-wrapper" v-show="!data.length">
+            <loading></loading>
+        </div>
         <div class="list-fixed" ref="fixed" v-show="fixedTitle">
             <div class="fixed-title">{{fixedTitle}} </div>
         </div>
@@ -40,6 +43,7 @@
 <script type="text/ecmascript-6">
     import scroll from '@/base/scroll/scroll'
     import {getData} from  '@/common/js/dom'
+    import loading from '@/base/loading/loading'
 
     const SHORTCUT_ITEM_HEIGHT = 18
     const ITEM_HEIGHT = 30
@@ -60,7 +64,8 @@
               scrollY: -1,
               currentIndex: 0,
               listenScroll: true,
-              probeType: 3
+              probeType: 3,
+              diff: -1
           }
         },
         computed: {
@@ -70,9 +75,11 @@
               })
           },
           fixedTitle() {
-            if (this.currentIndex < 0) {
-
+            if (this.scrollY > 0) {
+                return ''
             }
+
+            return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
           }
         },
         methods: {
@@ -91,7 +98,7 @@
                 this._scrollTo( anchorIndex )
             },
             _scrollTo(index) {
-                if ( !index || index < 0) { // 移动到最上
+                if ( index < 0) { // 移动到最上
                     index = 0
                 }
 
@@ -114,6 +121,9 @@
                     height += item.clientHeight
                     this.listHeight.push(height)
                 })
+            },
+            selectItem(item) {
+                this.$emit('select', item)
             }
         },
         watch: {
@@ -124,7 +134,6 @@
           },
           scrollY(newY) {
               let listHeight = this.listHeight
-
               // 当滚动到顶部，newY>0
               if (newY > 0) {
                   this.currentIndex = 0
@@ -137,6 +146,7 @@
                   let height2 = listHeight[i + 1]
 
                   if (-newY >= height1 && -newY < height2) {
+                      this.diff = newY + height2
                       this.currentIndex = i
                   }
               }
@@ -145,10 +155,20 @@
                   this.currentIndex = listHeight.length - 1
               }
 
-          }
+          },
+          diff(newVal) {
+              let fixedTop = (newVal > 0 && newVal < ITEM_HEIGHT) ? newVal - ITEM_HEIGHT : 0
+              if (this.fixedTop === fixedTop) {
+                  return
+              }
+              this.fixedTop = fixedTop
+              this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px, 0) `
+          },
+
         },
         components: {
-            scroll
+            scroll,
+            loading
         }
     }
 </script>
