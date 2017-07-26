@@ -16,7 +16,7 @@
         <div class="bg-layer" ref="layer"></div>
         <scroll :data="songs" :listen-scroll="listenScroll" :probe-type="probeType" @scroll="scroll" class="list" ref="list">
             <div class="song-list-wrapper">
-                <song-list :songs="songs"></song-list>
+                <song-list :songs="songs" :rank="rank"></song-list>
             </div>
         </scroll>
         <div v-show="!songs.length" class="loading-container">
@@ -44,6 +44,10 @@
               type: String,
               default: ''
             },
+            rank: {
+                type: Boolean,
+                default: false
+            },
             songs: {
                 type: Array,
                 default: []
@@ -70,7 +74,7 @@
         },
         methods: {
             back() {
-                this.$router.push("/singer")
+                this.$router.back()
             },
             scroll(pos) {
                 this.scrollY = pos.y
