@@ -16,7 +16,7 @@
         <div class="bg-layer" ref="layer"></div>
         <scroll :data="songs" :listen-scroll="listenScroll" :probe-type="probeType" @scroll="scroll" class="list" ref="list">
             <div class="song-list-wrapper">
-                <song-list :songs="songs" :rank="rank"></song-list>
+                <song-list :songs="songs" :rank="rank" @selectSong="selectSong"></song-list>
             </div>
         </scroll>
         <div v-show="!songs.length" class="loading-container">
@@ -30,6 +30,8 @@
     import loading from '@/base/loading/loading'
     import SongList from '@/base/song-list/song-list'
     import {prefixStyle} from '@/common/js/dom'
+    import {mapActions} from 'vuex'
+
     const RESERVED_HEIGHT = 40
     const transform = prefixStyle('transform')
     const backdrop = prefixStyle('backdrop-fliter')
@@ -78,7 +80,16 @@
             },
             scroll(pos) {
                 this.scrollY = pos.y
-            }
+            },
+            selectSong(index) {
+                this.selectPlay({
+                    list:this.songs,
+                    index
+                })
+            },
+            ...mapActions([
+              'selectPlay'
+            ])
         },
         components: {
             scroll,

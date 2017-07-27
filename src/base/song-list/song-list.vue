@@ -1,7 +1,7 @@
 <template>
     <div class="song-list">
         <ul>
-            <li v-for="(song, index) in songs" class="item" >
+            <li v-for="(song, index) in songs" class="item" @click="selectSong(index)" >
                 <div class="rank" v-show="rank">
                     <span :class="getRankCls(index)" v-text="getRankText(index)"></span>
                 </div>
@@ -41,6 +41,9 @@
                 if (index > 2) {
                     return index + 1
                 }
+            },
+            selectSong(index) {
+                this.$emit('selectSong', index)
             }
         },
         created() {
