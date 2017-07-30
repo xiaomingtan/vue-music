@@ -5,48 +5,48 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import {getSongList} from '@/api/recommend'
+    import {mapMutations,mapGetters} from 'vuex'
     import MusicList from '@/components/music-list/music-list'
-    import {getSingerDetail} from '@/api/singer'
     import {ERROR_OK} from '@/api/config'
     import {createSong} from '@/common/js/song'
-    import {mapGetters} from 'vuex'
 
     export default {
+        data() {
+            return {
+                songs: []
+            }
+        },
         computed: {
             title() {
-                return this.singer.name
+                return this.disc.dissname
             },
             bgImage() {
-                return this.singer.avatar
+                return this.disc.imgurl
             },
             ...mapGetters([
-                'singer'
+                'disc'
             ])
         },
-        data() {
-                return {
-                    songs: []
-                }
-        },
         created() {
-          this._getDetail()
+          this._getDiscDetail()
         },
         methods: {
-            _getDetail() {
-                if (!this.singer.id) {
-                    this.$router.push('/singer')
+            _getDiscDetail() {
+                if (!this.disc.dissid) {
+                    this.$router.push('/recommend')
                     return
                 }
-                getSingerDetail(this.singer.id).then((res) => {
+                getSongList(this.disc.dissid).then((res) => {
                     if (res.code === ERROR_OK) {
-                        this.songs = this._normalizeSongs(res.data.list)
+                        this.songs = this._normalizeSongs(res.cdlist[0].songlist)
                     }
                 })
             },
             _normalizeSongs(list) {
                 let ret = []
                 list.forEach((item) => {
-                    let {musicData} = item
+                    let musicData = item
                     if (musicData.songid && musicData.albummid) {
                         ret.push(createSong(musicData))
                     }

@@ -5,7 +5,7 @@
     </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script scoped type="text/ecmascript-6">
     import {ERROR_OK} from '@/api/config'
     import {getSingerList} from '@/api/singer'
     import Singer from '@/common/js/singer'

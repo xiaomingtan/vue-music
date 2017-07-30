@@ -62,6 +62,7 @@
             align-items: center
             box-sizing: border-box
             height: 64px
+            font-size: $font-size-medium
             .rank
                 flex: 0 0 25px
                 width: 25px

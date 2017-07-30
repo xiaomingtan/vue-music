@@ -8,6 +8,7 @@ const state = {
     playlist: [],
     sequencelist: [],
     topList: {},
+    disc: {}
 }
 
 export default state
