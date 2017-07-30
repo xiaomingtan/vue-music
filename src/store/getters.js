@@ -4,7 +4,7 @@ export const playing = state => state.playing
 
 export const fullScreen = state => state.fullScreen
 
-export const model = state => state.model
+export const mode = state => state.mode
 
 export const playlist = state => state.playlist
 
