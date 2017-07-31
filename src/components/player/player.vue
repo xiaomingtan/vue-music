@@ -654,7 +654,7 @@
             transition: all 0.4s
             .top, .bottom
                 transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32)
-        .normal-enter,.normal-leave
+        .normal-enter,.normal-leave-to
             opacity: 0
             .top
                 transform: translate3d(0, -100px, 0)
