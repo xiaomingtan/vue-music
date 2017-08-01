@@ -1,8 +1,10 @@
 <template>
     <scroll class="suggest"
+            ref="suggest"
             :data="result"
             :beforeScroll="beforeScroll"
             :pullup="pullup"
+            @beforeScroll="scrollStart"
             @scrollToEnd="searchMore"
     >
         <ul class="suggest-list">
@@ -62,6 +64,12 @@
             }
         },
         methods: {
+            refresh() {
+                this.$refs.suggest.refresh()
+            },
+            scrollStart() {
+              this.$emit('scrollStart')
+            },
             search() {
                 this.page = 1
                 this.hasMore = true
@@ -119,7 +127,9 @@
                 }
             },
             selectItem(item) {
+                let name
                 if (item.type === TYPE_SINGER) {
+                    name = item.singername
                     const singer = new Singer({
                         id: item.singermid,
                         name: item.singername
@@ -127,8 +137,10 @@
                     this.$router.push(`/singer/${singer.id}`)
                     this.setSinger(singer)
                 } else {
+                    name = item.name
                     this.insertSong(item)
                 }
+                this.$emit('select', name)
             },
             ...mapActions([
                 'insertSong'
