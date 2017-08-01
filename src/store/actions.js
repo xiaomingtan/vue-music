@@ -1,7 +1,7 @@
 import * as types  from './mutation-types'
 import {shuffle} from '@/common/js/util'
 import {playMode} from '@/common/js/config'
-import {saveSearch,deleteSearch,clearSearch} from '@/common/js/cache'
+import {saveSearch,deleteSearch,clearSearch,savePlay, saveFavorite, deleteFavorite} from '@/common/js/cache'
 
 
 function findIndex(list, song) {
@@ -15,7 +15,6 @@ export const selectPlay =  function({commit, state}, {list, index}) {
     commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING_STATE, true)
     commit(types.SET_SEQUENCE_LIST, list)
-
     if (state.mode === playMode.random) {
         let randomList = shuffle(list)
         let newIndex = findIndex(randomList, list[index])
@@ -26,15 +25,23 @@ export const selectPlay =  function({commit, state}, {list, index}) {
         commit(types.SET_PLAYLIST, list)
         commit(types.SET_CURRENT_INDEX, index)
     }
+
 }
 
-export const selectRandomPlay = function ({commit}, {list, index}) {
-    commit(types.SET_FULL_SCREEN, true)
+export const selectRandomPlay = function ({commit}, {list}) {
+/*    commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING_STATE, true)
     commit(types.SET_PLAY_MODE, playMode.random)
     commit(types.SET_SEQUENCE_LIST, list)
     commit(types.SET_PLAYLIST, shuffle(list))
-    commit(types.SET_CURRENT_INDEX, index)
+    commit(types.SET_CURRENT_INDEX, index)*/
+    commit(types.SET_PLAY_MODE, playMode.random)
+    commit(types.SET_SEQUENCE_LIST, list)
+    let randomList = shuffle(list)
+    commit(types.SET_PLAYLIST, randomList)
+    commit(types.SET_CURRENT_INDEX, 0)
+    commit(types.SET_FULL_SCREEN, true)
+    commit(types.SET_PLAYING_STATE, true)
 }
 
 export const insertSong = function({commit, state}, song) {
@@ -71,6 +78,7 @@ export const insertSong = function({commit, state}, song) {
         }
     }
 
+
     commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING_STATE, true)
     commit(types.SET_SEQUENCE_LIST, sequenceList)
@@ -90,6 +98,11 @@ export const deleteSearchHistory = function ({commit}, query) {
 export const clearSearchHistory = function ({commit}) {
     commit(types.SET_SEARCH_HISTORY, clearSearch())
 }
+
+export const savePlayHistory = function ({commit}, song) {
+    commit(types.SET_PLAY_HISTORY, savePlay(song))
+}
+
 
 export const deleteSong = function({commit, state}, song) {
     let sequencelist = state.sequencelist.slice()
@@ -121,4 +134,12 @@ export const deleteSongList = function ({commit}) {
     commit(types.SET_PLAYLIST, [])
     commit(types.SET_SEQUENCE_LIST, [])
     commit(types.SET_PLAYING_STATE, false)
+}
+
+export const saveFavoriteList = function ({commit}, song) {
+    commit(types.SET_FAVORITE_LIST, saveFavorite(song))
+}
+
+export const deleteFavoriteList = function ({commit}, song) {
+    commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
 }

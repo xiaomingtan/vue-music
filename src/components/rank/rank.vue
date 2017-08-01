@@ -1,6 +1,6 @@
 <template>
     <div class="rank" ref="rank">
-        <scroll :data="topList" class="toplist">
+        <scroll :data="topList" class="toplist" ref="list">
             <ul>
                 <li class="item" v-for="item in topList" @click="selectItem(item)">
                     <div class="icon">
@@ -28,7 +28,9 @@
     import scroll from '@/base/scroll/scroll'
     import loading from '@/base/loading/loading'
     import {mapMutations} from 'vuex'
+    import {playlistMixin} from '@/common/js/mixin'
     export default {
+        mixins: [playlistMixin],
         data() {
             return {
                 topList: []
@@ -38,6 +40,11 @@
             this._getTopList()
         },
         methods: {
+            handlePlaylist(playlist) {
+                const bottom = playlist.length > 0 ? '60px' : ''
+                this.$refs.rank.style.bottom = bottom
+                this.$refs.list.refresh()
+            },
             _getTopList() {
                 getTopList().then((res) => {
                     if (res.code === ERROR_OK) {

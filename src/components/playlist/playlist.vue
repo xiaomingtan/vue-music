@@ -4,7 +4,7 @@
             <div class="list-wrapper" @click.stop>
                 <div class="list-header">
                     <h1 class="title">
-                        <i class="icon"></i>
+                        <i class="icon" :class="modeCon" @click="changeMode"></i>
                         <span class="text">{{modeText}}</span>
                         <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
                     </h1>
@@ -15,7 +15,7 @@
                             @click="selectItem(item,index)">
                             <i class="current" :class="getCurrentIcon(item)"></i>
                             <span class="text">{{item.name}}</span>
-                            <span class="like"><i class="icon-not-favorite"></i></span>
+                            <span class="like" @click.stop="toggleFavorite(item)"><i :class="getFavoriteIcon(item)"></i></span>
                             <span @click.stop="deleteOne(item)" class="delete"><i class="icon-delete"></i></span>
                         </li>
                     </transition-group>
@@ -43,8 +43,10 @@
     import confirm from '@/base/confirm/confirm'
     import scroll from '@/base/scroll/scroll'
     import AddSong from '@/components/add-song/add-song'
+    import {playerMixin} from '@/common/js/mixin'
 
     export default {
+        mixins: [playerMixin],
         data() {
             return {
                 showFlag: false
@@ -52,12 +54,9 @@
         },
         computed: {
             modeText() {
-                return this.mode === playMode.sequence ? '顺序播放' : mode === playMode.random ? '随机播放' : '单曲循环'
+                return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
             },
             ...mapGetters([
-                'mode',
-                'sequencelist',
-                'currentSong',
                 'playlist',
             ])
         },
@@ -71,7 +70,7 @@
             },
             selectItem(item, index) {
                 if (this.mode === playMode.random) {
-                    index = this.playlist.findIndex((song) => {
+                    index = this.playlist.findIndex( (song) => {
                         return song.id === item.id
                     })
                 }
@@ -96,16 +95,34 @@
             },
             show() {
                 this.showFlag = true
-                this.$refs.listContent.refresh()
+                setTimeout(()=>{
+                    this.$refs.listContent.refresh()
+                    this.scrollToCurrent(this.currentSong)
+                }, 20)
+            },
+            scrollToCurrent(current) {
+                const index = this.sequencelist.findIndex((song) => {
+                    return current.id === song.id
+                })
+                this.$refs.listContent.scrollToElement(this.$refs.list.$el.children[index], 500)
             },
             ...mapActions([
                     'deleteSong',
                     'deleteSongList'
             ]),
             ...mapMutations({
-                'setCurrentIndex': 'SET_CURRENT_INDEX',
                 'setPlayingState': 'SET_PLAYING_STATE',
             })
+        },
+        watch: {
+          currentSong(newSong, oldSong) {
+              if (newSong.id === oldSong.id) {
+                  return
+              }
+              setTimeout(()=>{
+                  this.scrollToCurrent(this.currentSong)
+              }, 20)
+          }
         },
         components: {
             confirm,

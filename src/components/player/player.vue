@@ -69,7 +69,7 @@
                             <i class="icon-next"  @click="nextSong"></i>
                         </div>
                         <div class="icon i-right">
-                            <i class="icon icon-not-favorite"></i>
+                            <i class="icon" @click="toggleFavorite(currentSong)" :class="getFavoriteIcon(currentSong)"></i>
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
         </transition>
         <playlist ref="playlist"></playlist>
         <audio ref="audio" :src="currentSong.url"
-               @canplay="songReady"
+               @play="songReady"
                @error="playError"
                @timeupdate="updateTime"
                @ended="endSong"
@@ -107,7 +107,7 @@
 <script type="text/ecmascript-6">
     import ProgressBar from '@/base/progress-bar/progress-bar'
     import ProgressCircle from '@/base/progress-circle/progress-circle'
-    import {mapGetters, mapMutations} from 'vuex'
+    import {mapGetters, mapMutations,mapActions} from 'vuex'
     import {prefixStyle} from '@/common/js/dom'
     import animations from 'create-keyframe-animation'
     import {playMode} from '@/common/js/config'
@@ -115,10 +115,12 @@
     import Lyric from 'lyric-parser'
     import scroll from '@/base/scroll/scroll'
     import Playlist from '@/components/playlist/playlist'
+    import {playerMixin} from '@/common/js/mixin'
 
     const transform = prefixStyle('transform')
     const transitionDuration = prefixStyle('transitionDuration')
     export default {
+        mixins: [playerMixin],
         data() {
             return {
                 currentTime: 0,
@@ -140,9 +142,6 @@
             miniCon() {
                 return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
             },
-            modeCon() {
-                return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-            },
             disableCls () {
               return this.songReadyState? '': 'disable'
             },
@@ -150,13 +149,10 @@
                 return this.currentTime / this.currentSong.duration
             },
             ...mapGetters([
-                'currentSong',
                 'fullScreen',
                 'playing',
-                'currentIndex',
                 'playlist',
-                'mode',
-                'sequencelist'
+                'currentIndex'
             ])
         },
         created() {
@@ -171,6 +167,7 @@
             },
             songReady() {
                 this.songReadyState = true
+                this.savePlayHistory(this.currentSong)
             },
             playError() {
                 this.songReadyState = true
@@ -291,19 +288,6 @@
                 this.$refs.audio.play()
                 this.setPlayingState(true)
             },
-            changeMode() {
-                const mode = (this.mode + 1) % 3
-                this.setPlayMode(mode)
-                let list = null
-                if (mode === playMode.random) {
-                    list = shuffle(this.sequencelist)
-                } else {
-                    list = this.sequencelist
-                }
-
-                this.resetCurrentIndex(list)
-                this.setPlayList(list)
-            },
             openNormalPlayer() {
                 this.setFullScreen(true)
             },
@@ -330,21 +314,6 @@
                 if (this.currentLyric) {
                     this.currentLyric.seek(currentTime * 1000)
                 }
-
-            },
-            resetCurrentIndex(list) {
-                if (!list) {
-                    return
-                }
-               let currentIndex = 0
-               list.forEach((item, index)=>{
-                    if (item.id === this.currentSong.id) {
-                        currentIndex = index
-                        return
-                    }
-                })
-
-                this.setCurrentIndex(currentIndex)
 
             },
             // lyric
@@ -445,15 +414,15 @@
             },
             ...mapMutations({
                 setFullScreen: 'SET_FULL_SCREEN',
-                setCurrentIndex: 'SET_CURRENT_INDEX',
                 setPlayingState: 'SET_PLAYING_STATE',
-                setPlayMode: 'SET_PLAY_MODE',
-                setPlayList: 'SET_PLAYLIST',
-            })
+            }),
+            ...mapActions([
+                  'savePlayHistory'
+                ])
         },
         watch: {
             currentSong(newSong, oldSong) {
-                if (newSong.id === oldSong.id) {
+                if (newSong.id === oldSong.id || !newSong.id) {
                     return
                 }
                 // 重置歌词定时器
@@ -471,12 +440,13 @@
                 }, 1000)
             },
             playing(newPlaying) {
-              let audio = this.$refs.audio
-              if (newPlaying) {
-                  audio.play()
-              } else {
-                  audio.pause()
-              }
+                // 不使用nextTick会导致
+                // The play() request was interrupted by a new load request.
+                // 由于同时watch了 playing 和 currentSong 第一次点击时回触发两次play，导致被中断
+                const audio = this.$refs.audio
+                this.$nextTick(() => {
+                    newPlaying ? audio.play() : audio.pause()
+                })
           }
         },
         components: {

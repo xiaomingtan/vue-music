@@ -13,12 +13,13 @@
       <switches :switches="switches" :currentIndex="currentIndex" @switch="switchItem" v-show="!query"></switches>
       <div class="shortcut" v-show="!query">
         <div class="list-wrapper">
-          <scroll ref="songList" v-if="currentIndex===0" class="list-scroll" :data="playHistory">
+          <scroll ref="songList" class="list-scroll" v-if="currentIndex===0" :data="playHistory">
             <div class="list-inner">
+              <song-list :songs="playHistory" @select="selectSong"></song-list>
             </div>
           </scroll>
-          <scroll  ref="searchList" v-if="currentIndex===1" class="list-scroll"
-                  :data="searchHistory">
+          <scroll  ref="searchList"  class="list-scroll"
+                  :data="searchHistory" v-if="currentIndex===1">
             <div class="list-inner">
               <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
             </div>
@@ -28,6 +29,12 @@
       <div class="search-result" v-show="query">
         <suggest :query="query" :showSinger="showSinger" @select="selectSuggest" @listScroll="blurInput"></suggest>
       </div>
+      <top-tip ref="topTip">
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到播放列表</span>
+        </div>
+      </top-tip>
     </div>
   </transition>
 </template>
@@ -36,14 +43,14 @@
   import SearchBox from '@/base/search-box/search-box'
   import SongList from '@/base/song-list/song-list'
   import SearchList from '@/base/search-list/search-list'
-  import Scroll from '@/base/scroll/scroll'
+  import scroll from '@/base/scroll/scroll'
   import switches from '@/base/switches/switches'
   import Suggest from '@/components/suggest/suggest'
   import {mapGetters, mapActions} from 'vuex'
   import Song from '@/common/js/song'
   import {searchMixin} from '@/common/js/mixin'
   import {saveSearch} from '@/common/js/cache'
-
+  import TopTip from '@/base/top-tip/top-tip'
   export default {
     mixins: [searchMixin],
     data() {
@@ -82,10 +89,15 @@
         this.showFlag = false
       },
       selectSong(song, index) {
-
+        if (index === 0) {
+          return
+        }
+        this.$refs.topTip.show()
+        insertSong(song)
       },
-      selectSuggest() {
-        this.saveSearch()
+      selectSuggest(item) {
+        this.$refs.topTip.show()
+        this.saveSearchHistory(item)
       },
       switchItem(index) {
         this.currentIndex = index
@@ -99,7 +111,9 @@
       SearchList,
       Suggest,
       scroll,
-      switches
+      switches,
+      SongList,
+      TopTip,
     }
   }
 </script>
