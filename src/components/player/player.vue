@@ -274,6 +274,7 @@
                 } else {
                     let index = this.currentIndex + 1 ===  this.playlist.length ? 0 : this.currentIndex + 1
                     this.setCurrentIndex(index)
+                    this.setPlayingState(true)
                 }
             },
             endSong() {
@@ -434,10 +435,11 @@
                 }
 
                 clearTimeout(this.timer)
+                this.songReadyState = false
                 this.timer = setTimeout(() => {
                     this.$refs.audio.play()
                     this.getLyric()
-                }, 1000)
+                }, 300)
             },
             playing(newPlaying) {
                 // 不使用nextTick会导致
@@ -521,13 +523,13 @@
                     vertical-align: top
                     position: relative
                     height: 0
-                    padding-top: 80%
+                    padding-top: 70%
                     width: 100%
                     .cd-wrapper
                         position: absolute
-                        left: 10%
+                        left: 15%
                         top: 0
-                        width: 80%
+                        width: 70%
                         height: 100%
                         .cd
                             width: 100%
