@@ -88,12 +88,12 @@
       hide() {
         this.showFlag = false
       },
-      selectSong(song, index) {
+      selectSong(index, song) {
         if (index === 0) {
           return
         }
         this.$refs.topTip.show()
-        insertSong(song)
+        this.insertSong(new Song(song))
       },
       selectSuggest(item) {
         this.$refs.topTip.show()

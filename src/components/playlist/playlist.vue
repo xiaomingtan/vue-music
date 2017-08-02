@@ -69,6 +69,7 @@
                 this.hide()
             },
             selectItem(item, index) {
+                console.log(1)
                 if (this.mode === playMode.random) {
                     index = this.playlist.findIndex( (song) => {
                         return song.id === item.id
