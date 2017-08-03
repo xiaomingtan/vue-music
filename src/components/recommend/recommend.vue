@@ -11,6 +11,16 @@
                         </div>
                     </slider>
                 </div>
+                <div class="btns-wrapper">
+                    <router-link to="/singer" class="singer" tag="div">
+                        <i class="icon icon-mine"></i>
+                        <p class="title">歌手</p>
+                    </router-link>
+                    <router-link to="/rank" class="rank" tag="div">
+                        <i class="icon icon-ok"></i>
+                        <p class="title">排行</p>
+                    </router-link>
+                </div>
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
@@ -61,6 +71,12 @@
                 this.$refs.recommend.style.bottom = bottom
                 this.$refs.scroll.refresh()
             },
+            showSinger() {
+
+            },
+            showRank() {
+
+            },
             _getRecommend() {
                getRecommend().then( (res) => {
                     if (res.code == ERROR_OK) {
@@ -103,7 +119,7 @@
     .recommend
         position: fixed
         width: 100%
-        top: 88px
+        top: 44px
         bottom: 0
         .recommend-content
             height: 100%
@@ -112,6 +128,20 @@
                 position: relative
                 width: 100%
                 overflow: hidden
+            .btns-wrapper
+                font-size: 0
+                padding-top : 10px
+                .icon
+                    color : $color-theme
+                    font-size : $font-size-large-x
+                .rank,.singer
+                    text-align : center
+                    box-sizing : border-box
+                    display : inline-block
+                    width : 50%
+                    .title
+                        padding-top : 5px
+                        font-size : $font-size-medium
             .recommend-list
                 .list-title
                     height: 65px

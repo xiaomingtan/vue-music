@@ -61,6 +61,15 @@ export default new Router({
       redirect : '/recommend'
     },
     {
+      path: '/user',
+      name: 'user' ,
+      component: UserCenter,
+      children: [{
+        path: ':id',
+        component: Disc
+      }]
+    },
+    {
       path: '/recommend',
       name: 'recommend' ,
       component: Recommend,
@@ -91,11 +100,6 @@ export default new Router({
       path: '/search',
       name: 'search' ,
       component: Search
-    },
-    {
-      path: '/user',
-      name: 'user',
-      component: UserCenter
     }
   ]
 })

@@ -103,7 +103,7 @@
             margin: 20px
         .shortcut-wrapper
             position: fixed
-            top: 178px
+            top: 134px
             bottom: 0
             .shortcut
                 height: 100%

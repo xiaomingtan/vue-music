@@ -1,8 +1,16 @@
 <template>
-    <div class="singer" ref="singer">
-        <list-view :data="singers" @select="selectSinger"></list-view>
-        <router-view></router-view>
-    </div>
+    <transition name="slide">
+        <div class="singer" ref="singer">
+            <div class="title-wrapper">
+                <div class="back" @click="back">
+                    <i class="icon-back"></i>
+                </div>
+                <span class="title">歌手</span>
+            </div>
+            <list-view :data="singers" @select="selectSinger"></list-view>
+            <router-view></router-view>
+        </div>
+    </transition>
 </template>
 
 <script scoped type="text/ecmascript-6">
@@ -19,13 +27,17 @@
         mixins: ['playlistMixin'],
         data () {
           return {
-              singers : []
+              singers : [],
+              showFlag : false
           }
         },
         mounted() {
             this._getSingerList()
         },
         methods: {
+            back() {
+                this.$router.back()
+            },
             handlePlaylist(playlist) {
                 const bottom = playlist.length > 0 ? '60px' : ''
                 this.$refs.singer.style.bottom = bottom
@@ -107,10 +119,28 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
+    @import "~common/stylus/variable"
     .singer
         position: fixed
-        top: 88px
+        top: 0
         bottom: 0
         width: 100%
+        background : $color-background
+        .title-wrapper
+            height : 44px
+            position : relative
+            text-align : center
+            .back
+                position : absolute
+                left: 15px
+                top: 10px
+                color : $color-theme
+            .title
+                line-height : 44px
+                font-size : $font-size-large
+        &.slide-enter-active, &.slide-leave-active
+            transition: all 0.3s
+        &.slide-enter, &.slide-leave-to
+            transform: translate3d(100%, 0, 0)
 </style>

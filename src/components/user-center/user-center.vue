@@ -1,9 +1,8 @@
 <template>
-  <transition name="slide">
     <div class="user-center">
-      <div class="back" @click="back">
+      <!--<div class="back" @click="back">
         <i class="icon-back"></i>
-      </div>
+      </div>-->
       <div class="switches-wrapper">
         <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
       </div>
@@ -27,7 +26,6 @@
         <no-result :title="noResultDesc"></no-result>
       </div>
     </div>
-  </transition>
 </template>
 
 <script type="text/ecmascript-6">
@@ -121,7 +119,7 @@
 
   .user-center
     position: fixed
-    top: 0
+    top: 44px
     bottom: 0
     z-index: 100
     width: 100%
