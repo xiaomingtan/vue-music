@@ -18,7 +18,7 @@
         props : {
             loop: {
                 type: Boolean,
-                default: true
+                default: false
             },
             autoPlay: {
                 type: Boolean,
@@ -103,6 +103,7 @@
 
                 this.slider.on('scrollEnd', () => {
                     let pageIndex = this.slider.getCurrentPage().pageX
+
                     if (this.loop) {
                         pageIndex -= 1
                     }
@@ -112,12 +113,11 @@
                     if (this.autoPlay) {
                         this._play()
                     }
-
-                    this.slider.on('beforeScrollStart', () => {
-                        if (this.autoPlay) {
-                            clearTimeout(this.timer)
-                        }
-                    })
+                })
+                this.slider.on('beforeScrollStart', () => {
+                    if (this.autoPlay) {
+                        clearTimeout(this.timer)
+                    }
                 })
             },
             _play() {
