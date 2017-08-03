@@ -7,7 +7,7 @@
                 </div>
                 <span class="title">歌手</span>
             </div>
-            <list-view :data="singers" @select="selectSinger"></list-view>
+            <list-view :data="singers" @select="selectSinger" ref="list"></list-view>
             <router-view></router-view>
         </div>
     </transition>
@@ -24,7 +24,7 @@
     const HOT_NAME = '热门'
     const HOT_SINGER_LEN = 10
     export default {
-        mixins: ['playlistMixin'],
+        mixins: [playlistMixin],
         data () {
           return {
               singers : [],
@@ -123,19 +123,23 @@
     @import "~common/stylus/variable"
     .singer
         position: fixed
-        top: 0
+        top: 44px
         bottom: 0
         width: 100%
-        background : $color-background
         .title-wrapper
+            position : absolute
+            left : 0
+            right : 0
+            top: -44px
             height : 44px
-            position : relative
             text-align : center
+            background : $color-background
             .back
                 position : absolute
                 left: 15px
                 top: 10px
                 color : $color-theme
+                font-size : $font-size-large-x
             .title
                 line-height : 44px
                 font-size : $font-size-large

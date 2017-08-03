@@ -89,7 +89,7 @@
     .rank
         background-color : $color-background
         position: fixed
-        top: 0
+        top: 44px
         width: 100%
         bottom: 0
         &.slide-enter-active, &.slide-leave-active
@@ -97,14 +97,19 @@
         &.slide-enter, &.slide-leave-to
             transform: translate3d(100%, 0, 0)
         .title-wrapper
+            position : absolute
+            left: 0
+            right: 0
+            top: -44px
+            background-color : $color-background
             height : 44px
-            position : relative
             text-align : center
             .back
                  position : absolute
                  left: 15px
                  top: 10px
                  color : $color-theme
+                 font-size : $font-size-large-x
                 .title
                     line-height : 44px
                     font-size : $font-size-large

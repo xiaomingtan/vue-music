@@ -142,6 +142,6 @@
         .search-result
             position: fixed
             width: 100%
-            top: 178px
+            top: 134px
             bottom: 0
 </style>
