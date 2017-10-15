@@ -3,7 +3,6 @@
         <div class="slider-group" ref="sliderGroup">
             <slot></slot>
         </div>
-
         <div class="dots">
             <span v-for="(dot,index) in dots" class="dot" :class="{active: currentPageIndex === index}"></span>
         </div>
@@ -18,7 +17,7 @@
         props : {
             loop: {
                 type: Boolean,
-                default: false
+                default: true
             },
             autoPlay: {
                 type: Boolean,

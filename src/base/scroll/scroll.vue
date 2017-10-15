@@ -53,6 +53,7 @@
                     click: this.click
                 })
 
+                // 监听滚动
                 if (this.listenScroll) {
                     let me = this
                     this.scroll.on('scroll', (pos) => {
@@ -60,6 +61,7 @@
                     })
                 }
 
+                // 向上刷新
                 if (this.pullup) {
                     this.scroll.on('scrollEnd', () => {
                         if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {

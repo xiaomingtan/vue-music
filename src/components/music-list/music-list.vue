@@ -225,6 +225,8 @@
             over-flow: hidden
             .song-list-wrapper
                 padding: 20px 30px
+                width: 100%
+                box-sizing: border-box
         .loading-container
             position: absolute
             width: 100%
