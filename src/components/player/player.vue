@@ -438,7 +438,7 @@
                 this.songReadyState = false
                 this.timer = setTimeout(() => {
                     this.$refs.audio.play()
-                    this.getLyric()
+                    //this.getLyric()
                 }, 300)
             },
             playing(newPlaying) {
