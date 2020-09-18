@@ -77,20 +77,11 @@
                 this.$refs.scroll.refresh()
             },
             _getSingerList() {
-                getSingerList().then( (res) => {
-                    if (res.code == ERROR_OK) {
-                        const list = res.data.list.filter(item => item.Fsinger_id == "4558")
-                        this.singers = []
-                        list.forEach(item => {
-                                this.singers.push(new Singer({
-                                name: item.Fsinger_name,
-                                id: item.Fsinger_mid
-                            }))
-                        })
-                    } else {
-                        console.log(res.code)
-                    }
-                })
+                this.singers = [{
+                    avatar: "https://y.gtimg.cn/music/photo_new/T001R300x300M0000025NhlN2yWrP4.jpg?max_age=2592000",
+                    id: '0025NhlN2yWrP4',
+                    name: '周杰伦'
+                }]
             },
             selectSinger(singer) {
                 this.$router.push({
