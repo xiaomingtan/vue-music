@@ -18,32 +18,30 @@
             },
             bgImage() {
                 return this.singer.avatar
-            },
-            ...mapGetters([
-                'singer'
-            ])
+            }
         },
         data() {
             return {
+                singer: {
+                    avatar: "https://y.gtimg.cn/music/photo_new/T001R300x300M0000025NhlN2yWrP4.jpg?max_age=2592000",
+                    id: '0025NhlN2yWrP4',
+                    name: '周杰伦'
+                },
                 songs: []
             }
         },
         created() {
+            console.log("!23")
         },
         mounted() {
           this._getDetail()
         },
         methods: {
             _getDetail() {
-                if (!this.singer.id) {
-                    this.$router.push('/recommend')
-                    return
-                }
                 if (this.singer.name == "周杰伦") {
                     getSingerDetail2({
                         id: this.singer.id
                     }).then((res) => {
-                        console.log(res)
                         if (res.code === ERROR_OK) {
                             this.songs = res.body.models.map(item => {
                                 return new Song({
@@ -60,13 +58,12 @@
                         }
                     })
                 } else {
-                    getSingerDetail(this.singer.id).then((res) => {
+                    getSingerDetail(singer.id).then((res) => {
                         if (res.code === ERROR_OK) {
                             this.songs = this._normalizeSongs(res.data.list)
                         }
                     })
                 }
-               
             },
             _normalizeSongs(list) {
                 let ret = []
@@ -85,7 +82,7 @@
     }
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
     .fade-enter-active,.fade-leave-active
         transition: all 0.3s
     .fade-enter,.fade-leave-active

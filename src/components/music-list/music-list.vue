@@ -84,7 +84,13 @@
                 this.$refs.list.refresh()
             },
             back() {
-                this.$router.back()
+                if (window.location.href.indexOf('singer2') != -1) {
+                    this.$router.push({
+                        name: 'recommend'
+                    })
+                } else {
+                    this.$router.back()
+                }
             },
             scroll(pos) {
                 this.scrollY = pos.y

@@ -57,7 +57,7 @@ export default new Router({
     routes: [
     {
       path: '/',
-      redirect : '/recommend'
+      redirect : '/singer2'
     },
     {
       path: '/user',
@@ -94,6 +94,11 @@ export default new Router({
         path: ':id' ,
         component: SingerDetail
       }]
+    },
+    {
+      path: '/singer2',
+      name: 'singer2' ,
+      component: SingerDetail,
     },
     {
       path: '/search',
