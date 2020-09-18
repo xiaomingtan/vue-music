@@ -51,7 +51,7 @@
                         console.log(res.code)
                     }
                   })
-          },
+            },
             _normalizeSinger(list) {
                 let map = {
                     hot: {
@@ -59,7 +59,6 @@
                         items: []
                     }
                 }
-
                 list.forEach((item, index) => {
                     if ( index < HOT_SINGER_LEN) {
                         map.hot.items.push(new Singer({

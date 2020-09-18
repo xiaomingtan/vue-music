@@ -6,6 +6,7 @@ import router from './router'
 import fastclick from 'fastclick'
 import VueLazyload from 'vue-lazyload'
 import store from './store'
+import globalMixin from './common/js/global.mixin'
 
 Vue.config.productionTip = false
 import '@/common/stylus/index.styl'
@@ -15,6 +16,8 @@ fastclick.attach(document.body) //去除点击300ms延时
 Vue.use(VueLazyload, {
   loading: require('@/common/image/default.png')
 })
+
+Vue.mixin(globalMixin)
 
 /* eslint-disable no-new */
 new Vue({

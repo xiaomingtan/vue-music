@@ -1,17 +1,17 @@
 <template>
     <div class="recommend" ref="recommend">
-        <scroll ref="scroll" class="recommend-content" :data="discLists">
+        <scroll ref="scroll" class="recommend-content" :data="singers">
             <div>
-                <div  v-if="recommends.length" class="slider-wrapper">
+                <!-- <div  v-if="recommends.length" class="slider-wrapper">
                     <slider>
-                        <div class="slider-wrapper" v-for="item in recommends">
+                        <div class="slider-wrapper" v-for="item in recommends" :key="item.id">
                             <a :href="item.linkUrl">
                                 <img class="needsclick" :src="item.picUrl">
                             </a>
                         </div>
                     </slider>
-                </div>
-                <div class="btns-wrapper">
+                </div> -->
+                <!-- <div class="btns-wrapper">
                     <router-link to="/singer" class="singer" tag="div">
                         <i class="icon icon-mine"></i>
                         <p class="title">歌手</p>
@@ -20,21 +20,26 @@
                         <i class="icon icon-ok"></i>
                         <p class="title">排行</p>
                     </router-link>
-                </div>
+                </div> -->
                 <div class="recommend-list">
-                    <h1 class="list-title">热门歌单推荐</h1>
+                    <h1 class="list-title">热门歌手</h1>
                     <ul>
-                        <li class="item" v-for="(item, index) in discLists" @click="selectDisc(item)">
+                        <li 
+                            :key="item._id"
+                            class="item" 
+                            v-for="(item) in singers" 
+                            @click="selectSinger(item)"
+                        >
                             <div class="icon">
-                                <img width="60" height="60" v-lazy="item.imgurl" />
+                                <img width="60" height="60" v-lazy="item.avatar" />
                             </div>
                             <div class="text">
-                                <h2 class="name" v-html="item.creator.name"></h2>
-                                <p class="name" v-html="item.dissname"></p>
+                                <h2 class="name" v-html="item.name"></h2>
+                                <p class="name" v-html="item.id"></p>
                             </div>
                         </li>
                     </ul>
-                    <div class="loading-wrapper" v-show="!discLists.length">
+                    <div class="loading-wrapper" v-show="!singers.length">
                         <loading></loading>
                     </div>
                 </div>
@@ -46,23 +51,23 @@
 
 <script scoped type="text/ecmascript-6">
     import {ERROR_OK} from '@/api/config'
-    import {getRecommend, getDiscList} from '@/api/recommend'
+    import {getSingerList} from '@/api/singer'
     import slider from '@/base/slider/slider'
     import scroll from '@/base/scroll/scroll'
     import loading from '@/base/loading/loading'
     import {mapMutations} from 'vuex'
     import {playlistMixin} from '@/common/js/mixin'
+    import Singer from '@/common/js/singer'
+
     export default {
         mixins: [playlistMixin],
         data () {
           return {
-              recommends : [],
-              discLists : [],
+              singers: []
           }
         },
-        created() {
-            this._getRecommend()
-            this._getDiscList()
+        created() {            
+            this._getSingerList()
         },
         methods: {
             handlePlaylist() {
@@ -71,40 +76,31 @@
                 this.$refs.recommend.style.bottom = bottom
                 this.$refs.scroll.refresh()
             },
-            showSinger() {
-
-            },
-            showRank() {
-
-            },
-            _getRecommend() {
-               getRecommend().then( (res) => {
+            _getSingerList() {
+                getSingerList().then( (res) => {
                     if (res.code == ERROR_OK) {
-                        this.recommends = res.data.slider
+                        const list = res.data.list.filter(item => item.Fsinger_id == "4558")
+                        this.singers = []
+                        list.forEach(item => {
+                                this.singers.push(new Singer({
+                                name: item.Fsinger_name,
+                                id: item.Fsinger_mid
+                            }))
+                        })
                     } else {
                         console.log(res.code)
                     }
-               })
+                })
             },
-            _getDiscList() {
-                getDiscList().then( (res) => {
-                    if (res.code == ERROR_OK) {
-                        this.discLists = res.data.list
-                    } else {
-                        console.log(res.code)
-                    }
-                } )
-            },
-            selectDisc(disc) {
-                console.log(disc)
+            selectSinger(singer) {
                 this.$router.push({
-                    path: `recommend/${disc.dissid}`
+                    path: `singer/${singer.id}`
                 })
-                this.setDisc(disc)
+                this.setSinger(singer)
             },
-                ...mapMutations({
-                    setDisc: 'SET_DISC'
-                })
+            ...mapMutations({
+                setSinger: 'SET_SINGER'
+            })
         },
         components : {
             slider,

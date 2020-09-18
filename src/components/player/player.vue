@@ -37,6 +37,7 @@
                             <div v-if="currentLyric">
                                 <p ref="lyricLine"
                                    class="text"
+                                   :key="line.txt"
                                    :class="{'current': currentLineNum ===index}"
                                    v-for="(line,index) in currentLyric.lines">{{line.txt}}</p>
                             </div>

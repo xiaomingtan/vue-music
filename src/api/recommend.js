@@ -1,5 +1,5 @@
 import jsonp from '@/common/js/jsonp'
-import {commonParams, options} from './config'
+import {commonParams, options, server_url} from './config'
 import axios from 'axios'
 
 export function getRecommend() {
@@ -14,20 +14,10 @@ export function getRecommend() {
     return jsonp(url, data, options);
 }
 
-export function getDiscList() {
-    const url = '/api/getDiscList'
+export function getDiscList(params) {
+    const url = server_url + '/api/music2/find'
 
-    const data = Object.assign({}, commonParams, {
-        platform: 'yqq',
-        hostUin: 0,
-        sin: 0,
-        ein: 29,
-        sortId: 5,
-        needNewCode: 0,
-        categoryId: 10000000,
-        rnd: Math.random(),
-        format: 'json'
-    })
+    const data = Object.assign({}, commonParams, params)
 
     return axios.get(url, {
         params: data

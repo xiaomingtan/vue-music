@@ -6,9 +6,9 @@
 
 <script type="text/ecmascript-6">
     import MusicList from '@/components/music-list/music-list'
-    import {getSingerDetail} from '@/api/singer'
+    import {getSingerDetail, getSingerDetail2} from '@/api/singer'
     import {ERROR_OK} from '@/api/config'
-    import {createSong} from '@/common/js/song'
+    import Song, {createSong} from '@/common/js/song'
     import {mapGetters} from 'vuex'
 
     export default {
@@ -24,24 +24,49 @@
             ])
         },
         data() {
-                return {
-                    songs: []
-                }
+            return {
+                songs: []
+            }
         },
         created() {
+        },
+        mounted() {
           this._getDetail()
         },
         methods: {
             _getDetail() {
                 if (!this.singer.id) {
-                    this.$router.push('/singer')
+                    this.$router.push('/recommend')
                     return
                 }
-                getSingerDetail(this.singer.id).then((res) => {
-                    if (res.code === ERROR_OK) {
-                        this.songs = this._normalizeSongs(res.data.list)
-                    }
-                })
+                if (this.singer.name == "周杰伦") {
+                    getSingerDetail2({
+                        id: this.singer.id
+                    }).then((res) => {
+                        console.log(res)
+                        if (res.code === ERROR_OK) {
+                            this.songs = res.body.models.map(item => {
+                                return new Song({
+                                      id: item._id,
+                                      mid: "",
+                                      singer: item.singer,
+                                      name: item.name,
+                                      album: "",
+                                      duration: 120,
+                                      image: this.processServerUrl(item.cover),
+                                      url: this.processServerUrl(item.link)
+                                })
+                            })
+                        }
+                    })
+                } else {
+                    getSingerDetail(this.singer.id).then((res) => {
+                        if (res.code === ERROR_OK) {
+                            this.songs = this._normalizeSongs(res.data.list)
+                        }
+                    })
+                }
+               
             },
             _normalizeSongs(list) {
                 let ret = []

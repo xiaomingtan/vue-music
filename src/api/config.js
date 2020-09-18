@@ -11,4 +11,7 @@ export const options = {
     'prefix': 'tan'
 }
 
+
+export const server_url = 'http://cms.yixingcuican.com'
+
 export const ERROR_OK = 0;
